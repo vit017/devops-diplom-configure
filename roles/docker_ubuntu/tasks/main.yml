@@ -1,0 +1,29 @@
+---
+- name: "Set variables"
+  set_fact:
+    os_type: "ubuntu"
+    os_version: "20.04"
+    os_arch: "x86_64"
+
+- name: add signing key
+  apt_key:
+    url: "https://download.docker.com/linux/{{ os_type }}/gpg"
+    state: present
+- name: add repo into repo.d list
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu focal stable"
+    state: present
+- name: install docker
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+- name: start docker
+  service:
+    name: "docker"
+    enabled: true
+    state: started

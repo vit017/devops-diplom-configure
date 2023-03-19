@@ -1,0 +1,34 @@
+---
+- name: "Set variables"
+  set_fact:
+    os_type: "centos"
+    os_version: "7"
+    os_arch: "x86_64"
+
+- name: add signing key
+  rpm_key:
+    key: "https://download.docker.com/linux/{{ os_type }}/gpg"
+    state: present
+- name: add repo into repo.d list
+  yum_repository:
+    name: docker
+    description: docker repo
+    baseurl: "https://download.docker.com/linux/{{ os_type }}/{{ os_version }}/{{ os_arch }}/stable"
+    enabled: true
+    gpgcheck: true
+    gpgkey: "https://download.docker.com/linux/{{ os_type }}/gpg"
+- name: install docker
+  yum:
+    name:
+      - yum-utils
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+- name: start docker
+  service:
+    name: "docker"
+    enabled: true
+    state: started

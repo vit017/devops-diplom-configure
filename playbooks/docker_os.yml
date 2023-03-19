@@ -1,0 +1,15 @@
+---
+
+- hosts: app
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: docker_ubuntu
+      when: ansible_facts['os_family'] | lower == 'debian'
+
+    - role: docker_centos
+      when: ansible_facts['os_family'] | lower == 'redhat'
+
+
+
+

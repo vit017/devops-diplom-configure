@@ -1,0 +1,41 @@
+---
+- hosts: database
+  become: yes
+  gather_facts: yes
+  vars:
+    ansible_ssh_pipelining: yes
+  tasks:
+    - name: install packages
+      apt:
+        name:
+          - postgresql-{{ postgres_version }}
+          - postgresql-contrib
+          - libpq-dev
+          - python3-psycopg2
+        state: present
+
+    - name: check postgresql is initialized
+      stat:
+        path: "{{ postgres_data_path }}/pg_hba.conf"
+      register: postgres_data
+
+    - name: chown postgres
+      shell: "chown -R postgres: {{ postgres_path }}"
+
+    - name: initialize posgsql
+      shell: "{{ postgres_bin_path }}/initdb -D {{ postgres_data_path }}"
+      become: yes
+      become_user: postgres
+      when: not postgres_data.stat.exists
+
+    - name: start & enable
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+
+
+
+
+
