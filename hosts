@@ -42,18 +42,5 @@
 
 ## db-[99:101]-node.example.com
 
-[database]
-158.160.37.156  ansible_user=vm1
-
-[database:vars]
-postgres_bin_path=/usr/lib/postgresql/12/bin
-postgres_data_path=/usr/lib/postgresql/12/main
-postgres_path=/usr/lib/postgresql
-postgres_version=12
-
-[web]
-158.160.37.156  ansible_user=vm1
-
 [app]
-158.160.46.122  ansible_user=vm2
-158.160.38.195  ansible_user=vm3
+158.160.60.202 ansible_user=ubuntu
